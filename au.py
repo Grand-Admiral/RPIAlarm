@@ -2,41 +2,95 @@ import subprocess
 import time
 p1state = True
 state = True #loop state
-songList = ["song.mp3"] #list of audio files you wish to use
-audioFile = songList[0] #set first file
+verselocation= "/media/pi/Y9&10CITIPO/bible/"
+songList = ["audio/song.mp3", verselocation + "The Book of Genesis.mp3", verselocation + "The Book of Exodus.mp3", verselocation + "The Book of Leviticus.mp3", verselocation + "The Book of Numbers.mp3"] #list of audio files you wish to use
+totalTimeMin = [3.32, 781.75, 660, 478, 642] #final time of audio file eg 3min 30 sec = 3.50 
 
-place = 0 #where to start in audio file
-increase = 23.7 # because this audio stops after 24 seconds a little overlap is made to allow full audio
+trackList = 1 #track song and Total Time Min list
 
-totalTimeMin = [3.32] #final time of audio file eg 3min 30 sec = 3.30
-totalTime = totalTimeMin[0] * 60 #convert totalTimeMin to seconds
+audioFile = songList[trackList] #set first file
+
+place2 = 45 #intro melody
+place = 1884 #where to start in audio file *60 converts to min
+increase = 23.5 # because this audio stops after 24 seconds a little overlap is made to allow full audio
 p1 = None
 p2 = None
 
 while state == True:
     hour = time.localtime().tm_hour
     minu = time.localtime().tm_min
-    #sec = time.localtime().tm_sec
     
-    if hour == 6 and (minu >= 0 and minu <= 3):
-        print("Print in cycle.")
+    totalTime = totalTimeMin[trackList] * 60 #convert totalTimeMin to seconds
+    
+    if hour == 6 and (minu >= 0 and minu <= 2):
+        
         if p1state == True:
-            if p1 != None:
-                p1.kill() #ensure p1 sub is clear
-            p1 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p1 = subprocess.Popen(["mplayer", songList[0], "-ss", str(place2),"-softvol", "-volume", "10"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p1state = False
-        else:
             if p2 != None:
                 p2.kill() #ensure p2 sub is clear
-            p2 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            p2 = subprocess.Popen(["mplayer", songList[0], "-ss", str(place2), "-softvol", "-volume", "10"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p1state = True
             
-        time.sleep(increase)
-        place += increase
+            if p1 != None:
+                p1.kill() #ensure p1 sub is clear
+            
         
-    if place >= totalTime:
+        time.sleep(increase)
+
+        place2 += increase-1
+            
+        print(place2, totalTime)
+        
+        
+        
+        
+        
+        
+    
+    if hour == 6 and (minu >= 3 and minu <= 5):
+        place2 = 45
+        print("Au cycle.")
+        if p1state == True:
+            if trackList == 0:
+                p1 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place),"-softvol", "-volume", "10"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                p1 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place),"-softvol", "-volume", "200"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
+            p1state = False
+            if p2 != None:
+                p2.kill() #ensure p2 sub is clear
+        else:
+            if trackList == 0:
+                p2 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place), "-softvol", "-volume", "10"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                p2 = subprocess.Popen(["mplayer", audioFile, "-ss", str(place), "-softvol", "-volume", "200"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p1state = True
+            
+            if p1 != None:
+                p1.kill() #ensure p1 sub is clear
+            
+        
+        time.sleep(increase)
+        
+        if trackList >= 1:
+            place += increase+56
+        else:
+            place += increase-1
+            
+        print(place, totalTime)
+        
+    if place >= totalTime+23:
         #state = False
         print("Finished")
         place = 0
-        audioFile = songList[0]
         
+        print("songList vs Track List", len(songList)-1, trackList)
+        
+        if (len(songList)-1) >= trackList:
+            trackList += 1
+            audioFile = songList[trackList]
+        else:
+            trackList = 0
+            audioFile = songList[trackList]
