@@ -3,7 +3,7 @@ import time
 p1state = True
 state = True #loop state
 verselocation= "/media/pi/Y9&10CITIPO/bible/"
-songList = ["audio/song.mp3", verselocation + "The Book of Genesis.mp3", verselocation + "The Book of Exodus.mp3", verselocation + "The Book of Leviticus.mp3", verselocation + "The Book of Numbers.mp3"] #list of audio files you wish to use
+songList = [verselocation +"song.mp3", verselocation + "The Book of Genesis.mp3", verselocation + "The Book of Exodus.mp3", verselocation + "The Book of Leviticus.mp3", verselocation + "The Book of Numbers.mp3"] #list of audio files you wish to use
 totalTimeMin = [3.32, 781.75, 660, 478, 642] #final time of audio file eg 3min 30 sec = 3.50 
 
 trackList = 1 #track song and Total Time Min list
@@ -11,7 +11,7 @@ trackList = 1 #track song and Total Time Min list
 audioFile = songList[trackList] #set first file
 
 place2 = 45 #intro melody
-place = 1884 #where to start in audio file *60 converts to min
+place = 4428.0 #where to start in audio file *60 converts to min
 increase = 23.5 # because this audio stops after 24 seconds a little overlap is made to allow full audio
 p1 = None
 p2 = None
@@ -34,14 +34,12 @@ while state == True:
             p1state = True
             
             if p1 != None:
-                p1.kill() #ensure p1 sub is clear
-            
-        
+                p1.kill() #ensure p1 sub is clear       
         time.sleep(increase)
 
         place2 += increase-1
             
-        print(place2, totalTime)
+        #print(place2, totalTime) #Check Place of intro vid
         
         
         
@@ -79,8 +77,11 @@ while state == True:
         else:
             place += increase-1
             
-        print(place, totalTime)
-        
+        print("Place:", place, "Total Place:",totalTime)
+    
+    
+    
+    
     if place >= totalTime+23:
         #state = False
         print("Finished")
@@ -92,5 +93,5 @@ while state == True:
             trackList += 1
             audioFile = songList[trackList]
         else:
-            trackList = 0
+            trackList = 1
             audioFile = songList[trackList]
