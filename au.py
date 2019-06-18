@@ -11,7 +11,7 @@ trackList = 1 #track song and Total Time Min list
 audioFile = songList[trackList] #set first file
 
 place2 = 45 #intro melody
-place = 4428.0 #where to start in audio file *60 converts to min
+place = 19692.0 #where to start in audio file *60 converts to min
 increase = 23.5 # because this audio stops after 24 seconds a little overlap is made to allow full audio
 p1 = None
 p2 = None
@@ -22,7 +22,7 @@ while state == True:
     
     totalTime = totalTimeMin[trackList] * 60 #convert totalTimeMin to seconds
     
-    if hour == 6 and (minu >= 0 and minu <= 2):
+    if hour == 6 and (minu >= 30 and minu <= 32):
         
         if p1state == True:
             p1 = subprocess.Popen(["mplayer", songList[0], "-ss", str(place2),"-softvol", "-volume", "10"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -47,7 +47,7 @@ while state == True:
         
         
     
-    if hour == 6 and (minu >= 3 and minu <= 5):
+    if hour == 6 and (minu >= 33 and minu <= 35):
         place2 = 45
         print("Au cycle.")
         if p1state == True:
